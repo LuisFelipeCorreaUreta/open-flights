@@ -1,12 +1,8 @@
 import React, { Component, useState, useEffect }  from 'react'
-import axios from 'axios'
-import AxiosHelper from '../../utils/Requests/AxiosHelper'
-import Authenticate from '../../utils/Auth/Authenticate'
 import { AuthConsumer } from '../AuthContext'
-import Loader from '../Loader'
 import styled from 'styled-components'
 
-const LoginWrapper = styled.div``
+const SignUpWrapper = styled.div``
 const FormWrapper = styled.div`
   margin-top:50px;
 `
@@ -67,61 +63,34 @@ const Field = styled.div`
   width: 100%;
 `
 
-class Register extends Component {
-  state = { email: '', password: '', auth: false, loading: true }
+const Register = (props) => {
+  const [user, setUser] = useState({ email: '', password: ''})
+  const handleChange = (e) => setUser({ ...user, [e.target.name]: e.target.value })
 
-  constructor(props){
-    super(props)
-  }
-
-  componentDidMount(){
-    Authenticate()
-    .then( (resp) => {
-      if (resp) {
-        // If auth is true, user is already registered. Get 'em outta here!
-        this.props.history.goBack()
-      } else {
-        // Update our state with auth and let our render method know we're ready for 'em
-        this.setState({ auth: resp, loading: false})
-      }
-    })
-    .catch( err => console.log(err))
-  }
-
-  handleChange = (e) => this.setState({[e.target.name]: e.target.value })
-
-  render(){
-    return (
-      <AuthConsumer>
-        { ({ isAuth, signup }) => (
-          <LoginWrapper>
-            <FormWrapper>
-              <FormContainer>
-                <div>
-                  { 
-                    this.state.loading ?
-                    <Loader/> :
-                    <Form onSubmit={signup.bind(this, this.state, this.props)}>
-                      <h1>Sign Up</h1>
-                      <Field>
-                        <label>Email</label>
-                        <Input onChange={this.handleChange} type="email" value={this.state.email} placeholder="email" name="email"/>
-                      </Field>
-                      <Field>
-                        <label>Password</label>
-                        <Input onChange={this.handleChange} type="password"value={this.state.password} placeholder="password" name="password"/>
-                      </Field>
-                      <LoginButton type="submit">Login</LoginButton>
-                    </Form>   
-                  }
-                </div>
-              </FormContainer>
-            </FormWrapper>
-          </LoginWrapper>
-        )}
-      </AuthConsumer>
-    )
-  }
+  return (
+    <AuthConsumer>
+      { ({ isAuth, signup }) => (
+        <SignUpWrapper>
+          <FormWrapper>
+            <FormContainer>
+              <Form onSubmit={signup.bind(this, user, props)}>
+                <h1>Sign Up</h1>
+                <Field>
+                  <label>Email</label>
+                  <Input onChange={handleChange} type="email" value={user.email} placeholder="email" name="email"/>
+                </Field>
+                <Field>
+                  <label>Password</label>
+                  <Input onChange={handleChange} type="password"value={user.password} placeholder="password" name="password"/>
+                </Field>
+                <LoginButton type="submit">Login</LoginButton>
+              </Form>   
+            </FormContainer>
+          </FormWrapper>
+        </SignUpWrapper>
+      )}
+    </AuthConsumer>
+  )
 }
 
 export default Register

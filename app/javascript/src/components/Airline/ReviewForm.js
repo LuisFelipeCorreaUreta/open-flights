@@ -9,9 +9,11 @@ const RatingContainer = styled.div`
   border: 1px solid #e6e6e6;
   margin: 20px 0;
   padding:20px;
+  background: #fff;
 `
 
 const RatingBox = styled.div`
+  background: #fff;
   display: flex;
   width: 100%;
   justify-content: center;
@@ -91,18 +93,31 @@ const ReviewWrapper = styled.div`
   border-left: 1px solid rgba(0,0,0,0.1);
   height: 100vh;
   padding-top: 100px;
+  background: black;
+  padding-right: 80px;
 `
 
 const ReviewHeadline = styled.div`
   font-size:20px;
   padding: 15px 0;
   font-weight: bold;
+  color: #fff;
 `
 
 const RatingBoxTitle = styled.div`
   font-size: 20px;
   padding-bottom: 20px;
   font-weight: bold;
+`
+
+const Error = styled.div`
+  width: 100%;
+  color: rgb(255, 80, 44);
+  border: 1px solid rgb(255, 80, 44);
+  border-radius: 4px;
+  margin-top: 8px;
+  text-align:center;
+  padding: 4px;
 `
 
 const ReviewForm = (props) =>{
@@ -134,6 +149,10 @@ const ReviewForm = (props) =>{
           </RatingContainer>
         </Field>
         <SubmitBtn type="Submit">Create Review</SubmitBtn>
+        { 
+          props.error && 
+          <Error>{props.error}</Error>
+        }
       </form>
     </ReviewWrapper>
   )
