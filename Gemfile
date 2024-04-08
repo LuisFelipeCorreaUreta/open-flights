@@ -21,9 +21,14 @@ gem 'sass-rails', '~> 5.0'
 gem 'sendgrid-ruby'
 gem 'sidekiq'
 gem 'uglifier', '>= 1.3.0'
+gem 'graphql'
+gem 'graphql-batch'
+gem 'graphiql-rails', group: :development
 
 group :development, :test do
+  gem 'factory_bot_rails'
   gem 'rspec-rails'
+  gem 'rspec_junit_formatter'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 end
 

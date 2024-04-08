@@ -1,14 +1,16 @@
 module Api
   module V1
     class AirlinesController < ApiController
+      before_action :authenticate, only: %i[create update destroy]
+
       # GET /api/v1/airlines
       def index
-        render json: AirlineSerializer.new(airlines, options).serialized_json
+        render json: serializer(airlines, options)
       end
       
       # GET /api/v1/airlines/:slug
       def show
-        render json: AirlineSerializer.new(airline, options).serialized_json
+        render json: serializer(airline, options)
       end
 
       # POST /api/v1/airlines
@@ -16,9 +18,9 @@ module Api
         airline = Airline.new(airline_params)
 
         if airline.save
-          render json: AirlineSerializer.new(airline).serialized_json
+          render json: serializer(airline)
         else
-          render json: { error: airline.errors.messages }, status: 422
+          render json: errors(airline), status: 422
         end
       end
 
@@ -27,9 +29,9 @@ module Api
         airline = Airline.find_by(slug: params[:slug])
 
         if airline.update(airline_params)
-          render json: AirlineSerializer.new(airline, options).serialized_json
+          render json: serializer(airline, options)
         else
-          render json: { error: airline.errors.messages }, status: 422
+          render json: errors(airline), status: 422
         end
       end
 
@@ -38,11 +40,12 @@ module Api
         if airline.destroy
           head :no_content
         else
-          render json: { errors: airline.errors.messages }, status: 422
+          render json: errors(airline), status: 422
         end
       end
 
       private
+
       # Used For compound documents with fast_jsonapi
       def options
         @options ||= { include: %i[reviews] }
@@ -50,17 +53,29 @@ module Api
 
       # Get all airlines
       def airlines
-        @airlines ||= Airline.includes(:reviews).all
+        @airlines ||= Airline.includes(reviews: :user).all
       end
 
       # Get a specific airline
       def airline
-        @airline ||= Airline.includes(:reviews).find_by(slug: params[:slug])
+        @airline ||= Airline.includes(reviews: :user).find_by(slug: params[:slug])
       end
 
       # Strong params
       def airline_params
         params.require(:airline).permit(:name, :image_url)
+      end
+
+      # fast_jsonapi serializer
+      def serializer(records, options = {})
+        AirlineSerializer
+          .new(records, options)
+          .serialized_json
+      end
+
+      # Errors
+      def errors(record)
+        { errors: record.errors.messages }
       end
     end
   end
