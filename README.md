@@ -3,28 +3,16 @@
 
 This app is intended to be a simple example of a CRUD app built with **Ruby on Rails** and **React.js** using **Webpacker**.
 
----
-![OpenFlights Home](https://github.com/zayneio/open-flights/blob/master/app/assets/images/index-demo.png?raw=true)
----
-![OpenFlights Show](https://github.com/zayneio/open-flights/blob/master/app/assets/images/show-demo.png?raw=true)
+https://github.com/zayneio/open-flights/assets/37857673/489827d5-f142-4064-ba00-48e194acf2c7
 
 
 ---
-
-Some of the features of this app include:
-
-* Ruby version: `2.6.5`
-* Rails version: `6.0.1`
-* Database: `postgresql`
-* React version: `16.12.0`
-* React Hooks API
-* React Context API
 
 ## Running it locally
-- run `bundle exec rails db:prepare`
-- run `npm install` or `yarn install`
+- run `rails db:prepare`
+- run `yarn install`
 - run `bundle exec rails s`
-- in another tab run `./bin/webpack-dev-server` (optional) 
+- in another tab run `./bin/webpack-dev-server`
 - in another tab run `sidekiq` (optional, but necessary for things like password reset emails)
 - navigate to `http://localhost:3000`
 
@@ -293,11 +281,9 @@ class Airline < ApplicationRecord
   ...
 
   def avg_score
-    return 0 unless reviews.size.positive?
-
-    (reviews.sum(:score).to_f / reviews.count.to_f).to_f
+    reviews.average(:score).to_f.round(2)
   end
-end  
+end
 ```
 
 This method will return 0 if an airline has no reviews yet. Otherwise it will get the sum of all the review scores for an airline divided by the total number of reviews for that airline to get the average rating.
@@ -316,11 +302,9 @@ class Airline < ApplicationRecord
   end
 
   def avg_score
-    return 0 unless reviews.size.positive?
-
-    (reviews.sum(:score).to_f / reviews.count.to_f).to_f
+    reviews.average(:score).to_f.round(2)
   end
-end  
+end
 ```
 
 
